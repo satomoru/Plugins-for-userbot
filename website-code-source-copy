@@ -1,0 +1,54 @@
+import requests
+import zipfile
+import io
+import os
+import zipfile
+import asyncio
+import os
+import requests,time
+from telethon import TelegramClient, events
+from xiroshime import handler
+
+client = handler.client
+
+
+
+@events.register(events.NewMessage(pattern='.webparsing'))
+async def webpars(event):
+
+    website_url = event.message.text.split(' ')[1]
+
+    response = requests.get(website_url)
+    await event.edit("wait.")
+    time.sleep(1)
+    await event.edit("wait..")
+    time.sleep(1)
+    await event.edit("wait...")
+
+    with open('py_024.html', 'w', encoding='utf-8') as f:
+        f.write(response.text)
+
+    with open('py_024.css', 'w', encoding='utf-8') as f:
+        f.write(requests.get(website_url + '/style.css').text)
+
+    with open('py_024.js', 'w', encoding='utf-8') as f:
+        f.write(requests.get(website_url + '/script.js').text)
+
+    with open('py_024.php', 'w', encoding='utf-8') as f:
+        f.write(requests.get(website_url + '/index.php').text)
+
+    with zipfile.ZipFile('parsed.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipf.write('py_024.html')
+        zipf.write('py_024.css')
+        zipf.write('py_024.js')
+        zipf.write('py_024.php')
+
+    await client.send_file(event.chat_id, 'parsed.zip', caption=f"  {website_url}\n\n")
+
+    os.remove('py_024.html')
+    os.remove('py_024.css')
+    os.remove('py_024.js')
+    os.remove('py_024.php')
+    os.remove('parsed.zip'
+
+#developed by @py_024 
