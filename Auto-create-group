@@ -1,0 +1,17 @@
+from telethon.sync import TelegramClient
+from telethon.tl.functions.messages import CreateChatRequest
+from telethon.tl.types import InputPeerEmpty
+
+
+api_id = 10953300
+api_hash = '9c24426e5d6fa1d441913e3906627f87'
+
+client = TelegramClient('session_name', api_id, api_hash)
+
+for i in range(23):
+    result = client(CreateChatRequest(users=[InputPeerEmpty()], title=f'@py_024 {i+1}', ))
+    group_id = result.chats[0].id
+    print(f'succes created group {i+1}  ID:', group_id)
+
+client.start()
+client.disconnect()￼Enter
